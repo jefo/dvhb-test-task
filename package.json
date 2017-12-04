@@ -1,0 +1,25 @@
+{
+  "name": "dvhb-test-task",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/jefo/dvhb-test-task.git",
+  "author": "jefo <johnyjefo@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "neutrino start",
+    "build": "neutrino build",
+    "test": "neutrino test"
+  },
+  "dependencies": {
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
+    "react": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "neutrino": "^7.3.3",
+    "neutrino-preset-jest": "^7.3.3",
+    "neutrino-preset-react": "^7.3.3"
+  }
+}
