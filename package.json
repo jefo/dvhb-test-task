@@ -15,7 +15,8 @@
     "enzyme-adapter-react-16": "^1.1.0",
     "react": "^16.2.0",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "seamless-immutable": "^7.1.2"
   },
   "devDependencies": {
     "neutrino": "^7.3.3",
