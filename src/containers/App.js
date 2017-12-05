@@ -5,6 +5,7 @@ import Immutable from 'seamless-immutable';
 import { receiveItems, updateValue } from '../redux/percents';
 import PercentInput from '../components/PercentInput';
 
+import './App.css';
 
 class App extends React.Component {
 
@@ -18,7 +19,7 @@ class App extends React.Component {
     }
 
     render() {
-        const { item, updateValue } = this.props;
+        const { items, updateValue, totalSum } = this.props;
         return (
             <div>
                 <div className='controls'>
@@ -27,7 +28,11 @@ class App extends React.Component {
                     <button onClick={() => this.setItemCount(3)}>Три элемента</button>
                 </div>
                 <div id="slidersList">
-                    {this.props.items.map(item => (<PercentInput key={item.name} item={item} updateValue={updateValue} />))}
+                    {items.map(item => (<PercentInput key={item.name} item={item} updateValue={updateValue} />))}
+                </div>
+                <div className='summary'>
+                    <div><strong>Результат:</strong></div>
+                    {items.map(item => (<div className='summary__item'>{item.name}: {item.percent}</div>))}
                 </div>
             </div>
         )
@@ -38,11 +43,9 @@ class App extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        items: Object.values(state.items)
-    }
-};
+const mapStateToProps = state => ({
+    items: Object.values(state.items),
+})
 
 const serverData = [
     { name: 'item 1', percent: 0 },
