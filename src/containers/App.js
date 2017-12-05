@@ -25,11 +25,9 @@ class App extends React.Component {
                     <button onClick={() => this.setItemCount(1)}>Один элемент</button>
                     <button onClick={() => this.setItemCount(2)}>Два элемента</button>
                     <button onClick={() => this.setItemCount(3)}>Три элемента</button>
-                    <button onClick={() => this.setItemCount(4)}>Четыре элемента</button>
-                    <button onClick={() => this.setItemCount(5)}>Пять элементов</button>
                 </div>
                 <div id="slidersList">
-                    {this.props.items.map(item => (<PercentInput item={item} updateValue={updateValue} />))}
+                    {this.props.items.map(item => (<PercentInput key={item.name} item={item} updateValue={updateValue} />))}
                 </div>
             </div>
         )
