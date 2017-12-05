@@ -1,7 +1,7 @@
 # dvhb-test-task
 
-`yarn start` - запуск дев сервера
-`yarn test` - запуск тестов
+`yarn start` - запуск дев сервера  
+`yarn test` - запуск тестов  
 
 или **npm**
 
