@@ -15,6 +15,7 @@ export const initialState = Immutabe({
 });
 
 const MAX_VALUE = 100;
+const MIN_VALUE = 0;
 
 export default (state = initialState, { type, payload }) => {
     switch (type) {
@@ -24,42 +25,48 @@ export default (state = initialState, { type, payload }) => {
                 acc[next.name] = next;
                 return acc;
             }, {});
-            return state.set('items', items);
+            let itemsArr = Object.values(items);
+            let valuesSum = itemsArr.map(item => item.percent).reduce((sum, val) => sum + val);
+            state = state.set('items', items);
+            if (valuesSum < MAX_VALUE) {
+                state = state.setIn(['items', itemsArr[0].name, 'percent'], MAX_VALUE);
+            }
+            return state;
+
         case 'SET_ITEMS_COUNT':
             return state.set('visible', payload.count);
         case 'UPDATE_VALUE':
-            let prevValue = state.getIn(['items', payload.name, 'percent']);
-            let minVal = Number.POSITIVE_INFINITY;
-            let maxVal = Number.NEGATIVE_INFINITY;
-            var tmp = 0;
-            let maxItemName;
-            let minItemName;
-            Object.keys(state.items).forEach(key => {
-                tmp = state.getIn(['items', key, 'percent']);
-                if (tmp < minVal) {
-                    minVal = tmp;
-                    minItemName = key;
+            const updateValues = (name, value) => {
+                const path = (name) => ['items', name, 'percent'];
+                let prevValue = state.getIn(path(name));
+                if (value < 0) {
+                    value = MIN_VALUE;
                 }
-                if (tmp > maxVal) {
-                    maxVal = tmp;
-                    maxItemName = key;
+                if (value > MAX_VALUE) {
+                    value = MAX_VALUE
                 }
-            });
-            state = state.updateIn(['items', payload.name], item => {
-                item = item.set('percent',  payload.value);                
-                return item;
-            });
-            if (prevValue < payload.value) {
-                return state.updateIn(['items', maxItemName], item => {
-                    item = item.set('percent',  item.percent - payload.value);
-                    return item;
-                });
-            } else {
-                return state.updateIn(['items', minItemName], item => {
-                    item = item.set('percent',  prevValue - payload.value);
-                    return item;
-                });
-            }
+                state = state.setIn(path(name), value);
+                let itemsArr = Object.values(state.items.asMutable());
+                let valuesSum = itemsArr.map(item => item.percent).reduce((sum, val) => sum + val);
+                if (valuesSum === MAX_VALUE) {
+                    return state;
+                }
+                const findMax = (arr) => arr.reduce((a, b) => a.percent > b.percent ? a : b);
+                const findMin = (arr) => arr.reduce((a, b) => a.percent < b.percent ? a : b);
+                const findNext = value > prevValue ? findMax : findMin;
+                itemsArr = itemsArr
+                    .filter(item => item.name !== name)
+                    .sort((a, b) => a.percent - b.percent)
+                    .reverse();
+                let nextItem = findNext(itemsArr);
+                if (!nextItem) {
+                    return state;
+                }
+                let rest = MAX_VALUE - valuesSum;
+                let nextItemNextValue = nextItem.percent + rest;
+                return updateValues(nextItem.name, nextItemNextValue);
+            };
+            return updateValues(payload.name, payload.value);
         default:
             return state;
     }

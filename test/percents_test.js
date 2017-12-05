@@ -12,7 +12,7 @@ describe('percents', () => {
         const state = percents(initialState, action);
         expect(state).toEqual(initialState.merge({
             items: {
-                'item 1': { name: 'item 1', percent: 0 },
+                'item 1': { name: 'item 1', percent: 100 },
                 'item 2': { name: 'item 2', percent: 0 },
                 'item 3': { name: 'item 3', percent: 0 },
                 'item 4': { name: 'item 4', percent: 0 },
@@ -20,6 +20,7 @@ describe('percents', () => {
             }
         }));
     });
+    // it('should ')
     it('should set items count', () => {
         const action = setItemsCount(3);
         const state = percents(initialState, action);
@@ -40,26 +41,43 @@ describe('percents', () => {
             { name: 'item 5', percent: 90 }
         ]);
         let state = percents(initialState, receive);
-        let update = updateValue('item 2', 1);
+        let update = updateValue('item 5', 91);
         state = percents(state, update);
         expect(state).toEqual(state.merge({
             items: {
-                'item 2': { name: 'item 2', percent: 1 },
-                'item 5': { name: 'item 5', percent: 89 }
+                'item 3': { name: 'item 3', percent: 9 },
+                'item 5': { name: 'item 5', percent: 91 }
             }
         }, { deep: true }));
         update = updateValue('item 3', 8);
         state = percents(state, update);
         expect(state).toEqual(state.merge({
             items: {
-                'item 1': { name: 'item 1', percent: 2 },
-                'item 2': { name: 'item 2', percent: 1 },
+                'item 1': { name: 'item 1', percent: 1 },
+                'item 2': { name: 'item 2', percent: 0 },
                 'item 3': { name: 'item 3', percent: 8 },
-                'item 5': { name: 'item 5', percent: 89 }
+                'item 5': { name: 'item 5', percent: 91 }
             }
         }, { deep: true }));
-    });
-    it('should fix percent values', () => {
-        // Если у нескольких элементов одинаковое число процентов, проценты вычитаются у первого по порядку.
+        update = updateValue('item 5', 99);
+        state = percents(state, update);
+        expect(state).toEqual(state.merge({
+            items: {
+                'item 1': { name: 'item 1', percent: 1 },
+                'item 2': { name: 'item 2', percent: 0 },
+                'item 3': { name: 'item 3', percent: 0 },
+                'item 5': { name: 'item 5', percent: 99 }
+            }
+        }, { deep: true }));
+        update = updateValue('item 1', 0);
+        state = percents(state, update);
+        expect(state).toEqual(state.merge({
+            items: {
+                'item 1': { name: 'item 1', percent: 0 },
+                'item 2': { name: 'item 2', percent: 1 },
+                'item 3': { name: 'item 3', percent: 0 },
+                'item 5': { name: 'item 5', percent: 99 }
+            }
+        }, { deep: true }));
     });
 });
